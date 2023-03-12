@@ -1,13 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_notification/controllers/task_controller.dart';
 import 'package:flutter_notification/services/theme_services.dart';
 import 'package:flutter_notification/ui/add_task_bar.dart';
+import 'package:flutter_notification/ui/task_tile.dart';
 import 'package:flutter_notification/ui/theme.dart';
 import 'package:flutter_notification/ui/widgets/button.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../models/task.dart';
 import '../services/notification_services.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime _selectedDate = DateTime.now();
+  final _taskController = Get.put(TaskController());
   var notifyHelper;
   @override
   void initState() {
@@ -32,11 +38,54 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
           _addTaskBar(),
           _addDateBar(),
+          SizedBox(height: 10),
+          _showTasks(),
         ],
+      ),
+    );
+  }
+
+  _showTasks() {
+    return Expanded(
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+          if (!snapshot.hasData) {
+            return Text('Loading...');
+          }
+          return ListView.builder(
+            itemCount: snapshot.data?.docs.length,
+            itemBuilder: (_, index) {
+              final task =
+                  snapshot.data?.docs[index].data() as Map<String, dynamic>;
+              final taskMap = task != null ? Task.fromMap(task) : null;
+              return AnimationConfiguration.staggeredList(
+                  position: index,
+                  child: SlideAnimation(
+                    child: FadeInAnimation(
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            // onTap: () {
+                            //   _showTaskOptions(context, taskMap!);
+                            // },
+                            child: TaskTile(taskMap),
+                          )
+                        ],
+                      ),
+                    ),
+                  ));
+            },
+          );
+        },
       ),
     );
   }

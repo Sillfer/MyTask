@@ -17,10 +17,14 @@ dependencies:
   flutter_native_timezone:
   intl: 
   google_fonts:
+  sqflite:
   awesome_notifications: ^0.0.6+10
   get_storage: ^2.0.3
   equatable: ^2.0.5
   flutter_easyloading: ^3.0.5
+  flutter_staggered_animations:
+  firebase_core: ^2.7.1
+  cloud_firestore: ^4.4.4
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_notification/services/theme_services.dart';
 import 'package:flutter_notification/ui/homePage.dart';
@@ -6,9 +7,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-void main(List<String> args) {
+import 'db/db_helper.dart';
+
+Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  GetStorage.init();
+  await DBHelper.initDB();
+  await Firebase.initializeApp();
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
