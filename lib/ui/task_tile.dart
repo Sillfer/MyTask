@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notification/ui/theme.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/task.dart';
@@ -10,8 +12,7 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-      EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(bottom: 12),
       child: Container(
@@ -19,7 +20,7 @@ class TaskTile extends StatelessWidget {
         //  width: SizeConfig.screenWidth * 0.78,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: _getBGClr(task?.color??0),
+          color: _getBGClr(task?.color ?? 0),
         ),
         child: Row(children: [
           Expanded(
@@ -27,7 +28,7 @@ class TaskTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  task?.title??"",
+                  task?.title ?? "",
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(
                         fontSize: 16,
@@ -51,14 +52,14 @@ class TaskTile extends StatelessWidget {
                       "${task!.startTime} - ${task!.endTime}",
                       style: GoogleFonts.lato(
                         textStyle:
-                        TextStyle(fontSize: 13, color: Colors.grey[100]),
+                            TextStyle(fontSize: 13, color: Colors.grey[100]),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 12),
                 Text(
-                  task?.note??"",
+                  task?.note ?? "",
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(fontSize: 15, color: Colors.grey[100]),
                   ),
@@ -92,13 +93,13 @@ class TaskTile extends StatelessWidget {
   _getBGClr(int no) {
     switch (no) {
       case 0:
-        return Colors.blueAccent;
+        return Get.isDarkMode ? blueClr : darkBlueClr;
       case 1:
-        return Colors.pink;
+        return Get.isDarkMode ? pinkClr : darkP;
       case 2:
-        return Colors.yellow;
+        return Get.isDarkMode ? yellowClr : darkYellowClr;
       default:
-        return Colors.blue;
+        return Get.isDarkMode ? blueClr : darkBlueClr;
     }
   }
 }
