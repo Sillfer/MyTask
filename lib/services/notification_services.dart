@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -46,24 +47,30 @@ class NotifyHelper {
       payload: 'It could be anything you pass',
     );
   }
+  
 
-  scheduledNotification() async {
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'scheduled title',
-        'theme changes 5 seconds ago',
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'your channel id',
-            'your channel name',
-            'your channel description',
-          ),
+ scheduledNotification(DateTime selectedDate, String startTime) async {
+  final scheduledDate = DateFormat('yyyy-MM-dd').parse(selectedDate.toString());
+  final scheduledTime = DateFormat('hh:mm a').parse(startTime);
+  final scheduledDateTime = tz.TZDateTime.from(
+      scheduledDate.add(Duration(hours: scheduledTime.hour, minutes: scheduledTime.minute)), tz.local);
+  
+  await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'Task Reminder',
+      'You have a task to do',
+      scheduledDateTime,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your channel id',
+          'your channel name',
+          'your channel description',
         ),
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
-  }
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime);
+}
 
   void requestIOSPermissions() async {
     await flutterLocalNotificationsPlugin

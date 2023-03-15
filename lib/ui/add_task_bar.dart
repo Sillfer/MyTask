@@ -2,12 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_notification/controllers/task_controller.dart';
 import 'package:flutter_notification/models/task.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_notification/ui/theme.dart';
 import 'package:flutter_notification/ui/widgets/button.dart';
 import 'package:flutter_notification/ui/widgets/input_field.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../services/notification_services.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -17,6 +22,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  var notifyHelper;
   final TaskController _taskController = Get.put(TaskController());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
@@ -41,6 +47,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
     'Monthly',
   ];
   int _selectedColor = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    notifyHelper = NotifyHelper();
+    notifyHelper.initializeNotification();
+    notifyHelper.requestIOSPermissions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,6 +227,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       });
       print(_titleController.text);
       Get.back();
+      notifyHelper.scheduledNotification(_selectedDate, _startTime);
     } else {
       Get.snackbar("Error", "All fields are required",
           snackPosition: SnackPosition.BOTTOM,
@@ -224,21 +240,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
-  _addTaskToDb() async {
-    await _taskController.addTask(
-      task: Task(
-        title: _titleController.text,
-        note: _noteController.text,
-        date: DateFormat.yMd().format(_selectedDate),
-        startTime: _startTime,
-        endTime: _endTime,
-        remind: _selectedRemind,
-        repeat: _selectedRepeat,
-        color: _selectedColor,
-        isCompleted: false,
-      ),
-    );
-  }
+  // _addTaskToDb() async {
+  //   await _taskController.addTask(
+  //     task: Task(
+  //       title: _titleController.text,
+  //       note: _noteController.text,
+  //       date: DateFormat.yMd().format(_selectedDate),
+  //       startTime: _startTime,
+  //       endTime: _endTime,
+  //       remind: _selectedRemind,
+  //       repeat: _selectedRepeat,
+  //       color: _selectedColor,
+  //       isCompleted: false,
+  //     ),
+  //   );
+  // }
 
   _colorPallet() {
     return Column(
