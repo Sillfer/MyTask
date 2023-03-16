@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color blueClr = Color(0xff2196F3);
-const Color yellowClr = Color(0xffF9A825);
+const Color blueClr = Color.fromARGB(255, 25, 117, 192);
+const Color yellowClr = Color.fromARGB(255, 230, 154, 33);
 const Color darkYellowClr = Color(0xffF57F17);
-const Color pinkClr = Color(0xffF06292);
+const Color pinkClr = Color.fromARGB(255, 196, 56, 102);
 const Color darkP = Color(0xffC2185B);
 const Color darkBlueClr = Color(0xff0D47A1);
 const Color whiteClr = Color(0xffFFFFFF);

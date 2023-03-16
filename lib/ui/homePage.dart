@@ -53,7 +53,10 @@ class _HomePageState extends State<HomePage> {
   _showTasks() {
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('tasks')
+            .orderBy('color') // Add this line to order by creation date
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');

@@ -93,11 +93,11 @@ class TaskTile extends StatelessWidget {
   _getBGClr(int no) {
     switch (no) {
       case 0:
-        return Get.isDarkMode ? blueClr : darkBlueClr;
-      case 1:
         return Get.isDarkMode ? pinkClr : darkP;
-      case 2:
+      case 1: 
         return Get.isDarkMode ? yellowClr : darkYellowClr;
+      case 2: 
+        return Get.isDarkMode ? blueClr : darkBlueClr;
       default:
         return Get.isDarkMode ? blueClr : darkBlueClr;
     }
